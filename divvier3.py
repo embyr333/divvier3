@@ -9,19 +9,17 @@ a deterministic split for the 'Divvier' problem, to replace
 the original tool which used random sampling to process
 larger arrays, so could not guarentee an optimal split.
 
-Snapshot8: Choosing to return a message if single-element list is passed in.
+Snapshot9: Changed to returning a report string.
 
 TODO: 
 - More tests, checking with original Divvier.
-- Maybe change to returning a string as per original program reporting
-"Smallest difference found: ---, between subcollection ---, totalling ---
-and reciprocal subcollection ---, totalling ---",
-or immediately return a message re irrelevance if <2 elements.
-- Make GUI
+- Make GUI, executable.
 '''
 
-def divvy(nums: list[float]) -> tuple[list[float], list[float]]: 
-    if len(nums) < 2: # Exception to return type hint...
+# def divvy(nums: list[float]) -> tuple[list[float], list[float]]: 
+# --changed to returning a report string 
+def divvy(nums: list[float]) -> str: 
+    if len(nums) < 2: 
         return 'Single-element inputs are not relevant.'
 
     subcolls: list[list[float]] = [[]]
@@ -53,7 +51,17 @@ def divvy(nums: list[float]) -> tuple[list[float], list[float]]:
         complement.remove(e)
     # print('complement', complement) # temp check
 
-    return subcolls[ioffm], complement
+    # return subcolls[ioffm], complement 
+    # --changed to returning a report string 
+    return ('Smallest difference found: ' + str(abs(subcoll_sums[ioffm] - sum(complement))) + '\n' +
+    # 'between subcollection                      ' + str(subcolls[ioffm]) + '\n' +
+    # '(totalling ' + str(subcoll_sums[ioffm])  + ')\n' +
+    # 'and reciprocal/complimentary subcollection ' + str(complement) + '\n' 
+    # '(totalling ' + str(sum(complement))  + ')\n')
+    'between subcollection ' + str(subcolls[ioffm]) + '\n' +
+    '(totalling ' + str(subcoll_sums[ioffm])  + ')\n' +
+    'and complement        ' + str(complement) + '\n' 
+    '(totalling ' + str(sum(complement))  + ')\n')
 
 '''
 Note1: This would need to be removed if single-element inputs 
@@ -67,9 +75,9 @@ Note4: This is of course time-inefficient.
 
 
 # Some tests
-print(divvy([3,3,7,5,9])) # ([3, 3, 7], [5, 9])
-print(divvy([1,2,3])) # ([1, 2], [3])
-print(divvy([1,2])) # ([1], [2])
-print(divvy([1,2,1,2])) # ([1, 2], [2, 1])
-print(divvy([78, 93, 44, 27, 58, 25, 27, 73, 55, 32]))
+print(divvy([3,3,7,5,9])) # Smallest difference found: 1 ...
+print(divvy([1,2,3])) # Smallest difference found: 0 ...
+print(divvy([1,2])) # Smallest difference found: 1 ...
+print(divvy([1,2,1,2])) # Smallest difference found: 0 ...
+print(divvy([78, 93, 44, 27, 58, 25, 27, 73, 55, 32])) # Smallest difference found: 0 ...
 print(divvy([1])) # Single-element inputs are not relevant.
