@@ -9,18 +9,15 @@ a deterministic split for the 'Divvier' problem, to replace
 the original tool which used random sampling to process
 larger arrays, so could not guarentee an optimal split.
 
-Snapshot9: Changed to returning a report string.
+Snapshot10: A few more tests.
 
-TODO: 
-- More tests, checking with original Divvier.
-- Make GUI, executable.
+TODO: Make GUI, executable.
 '''
 
 # def divvy(nums: list[float]) -> tuple[list[float], list[float]]: 
-# --changed to returning a report string 
 def divvy(nums: list[float]) -> str: 
     if len(nums) < 2: 
-        return 'Single-element inputs are not relevant.'
+        return 'Input lists smaller than 2 numbers are not relevant.\n'
 
     subcolls: list[list[float]] = [[]]
     for num in nums:
@@ -50,18 +47,13 @@ def divvy(nums: list[float]) -> str:
     for e in subcolls[ioffm]: # Note4
         complement.remove(e)
     # print('complement', complement) # temp check
-
-    # return subcolls[ioffm], complement 
-    # --changed to returning a report string 
+ 
     return ('Smallest difference found: ' + str(abs(subcoll_sums[ioffm] - sum(complement))) + '\n' +
-    # 'between subcollection                      ' + str(subcolls[ioffm]) + '\n' +
-    # '(totalling ' + str(subcoll_sums[ioffm])  + ')\n' +
-    # 'and reciprocal/complimentary subcollection ' + str(complement) + '\n' 
-    # '(totalling ' + str(sum(complement))  + ')\n')
     'between subcollection ' + str(subcolls[ioffm]) + '\n' +
     '(totalling ' + str(subcoll_sums[ioffm])  + ')\n' +
     'and complement        ' + str(complement) + '\n' 
-    '(totalling ' + str(sum(complement))  + ')\n')
+    '(totalling ' + str(sum(complement))  + ')\n' +
+    '(Other combinations may exist.)\n')
 
 '''
 Note1: This would need to be removed if single-element inputs 
@@ -74,10 +66,16 @@ Note4: This is of course time-inefficient.
 '''
 
 
-# Some tests
-print(divvy([3,3,7,5,9])) # Smallest difference found: 1 ...
-print(divvy([1,2,3])) # Smallest difference found: 0 ...
-print(divvy([1,2])) # Smallest difference found: 1 ...
-print(divvy([1,2,1,2])) # Smallest difference found: 0 ...
-print(divvy([78, 93, 44, 27, 58, 25, 27, 73, 55, 32])) # Smallest difference found: 0 ...
-print(divvy([1])) # Single-element inputs are not relevant.
+# Some tests, with smallest difference noted 
+print(divvy([])) # Input lists smaller than 2 numbers are not relevant.
+print(divvy([1])) # Input lists smaller than 2 numbers are not relevant.
+print(divvy([3,3,7,5,9])) # 1 
+print(divvy([1,2,3])) # 0
+print(divvy([1,2])) # 1 
+print(divvy([1,2,1,2])) # 0 
+print(divvy([78, 93, 44, 27, 58, 25, 27, 73, 55, 32])) # 0 
+print(divvy([880, 953, 229, 77, 96, 37, 7, 30, 18, 2])) # 1 
+print(divvy([378, 222, 1, 83, 704, 6, 129, 455, 22, 97])) # 5
+print(divvy([378, 222, 1, 83, 704, 378, 222, 1, 83, 704])) # 0
+print(divvy([378, 222, 1, 83, 704, 378, 222, 1, 83, 704, 378, 222, 1, 83, 704])) # 10
+
