@@ -9,14 +9,9 @@ a deterministic split for the 'Divvier' problem, to replace
 the original tool which used random sampling to process
 larger arrays, so could not guarentee an optimal split.
 
-Snapshot12: Fixed an error found testing negative input.
-Although the tool was made with real-world positive-value items such as weights in mind,
-it should in principle handle negatives items also. Testing with negatives now generated 
-an 'unpredictable' error, exposing a bug I then found with the help of ChatGPT. 
-(Poor choice initialising a variable, when considering just positives initially.) 
+Snapshot13: Arranged to display error message in output field for invalid input.
 
 TODO: 
-- Arrange error message in output field for invalid input.
 - Maybe: add a Clear button to GUI; disable editing of output (though not copying).
 - Make an executable.
 '''
@@ -29,7 +24,12 @@ import re
 # If using GUI
 def divvy(): # if using GUI
     text = input_field.get("1.0",'end').rstrip() 
-    nums: list[float] = [float(x) for x in re.split(r"[,\s]+", text)]
+    output_field.delete('1.0', END) # clear any existing output
+    try:
+        nums: list[float] = [float(x) for x in re.split(r"[,\s]+", text)]
+    except ValueError: 
+        output_field.insert("end", 'Invalid input - please enter only numbers\n'
+        '(separated only by whitespace and/or commas)')
 
     if len(nums) < 2: 
         return 'Input lists smaller than 2 numbers are not relevant.\n'
@@ -50,9 +50,6 @@ def divvy(): # if using GUI
     half = total / 2
     # print('total', total, '  half', half) # temp check
 
-    # min_offset = total # minimum offset from half (initialise at anything larger than half)
-    # --creates error situations when negative numbers occur in input!
-    # ...initialising to standard max value expression fixes this bug
     min_offset = float('inf') # minimum offset from half 
 
     # ioffm = 0 # index of (first found) minimum offset (from half); Note2
@@ -78,7 +75,6 @@ def divvy(): # if using GUI
     # return report
 
     # If using GUI
-    output_field.delete('1.0', END) # clear any existing output
     output_field.insert("end", report)
 
 '''
@@ -106,6 +102,7 @@ Note4: This is of course time-inefficient.
 # print(divvy([378, 222, 1, 83, 704, 378, 222, 1, 83, 704, 378, 222, 1, 83, 704])) # 10
 # print(divvy([1.5,2.5,0.5,4.5])) # 0.0
 # print(divvy([1,-2,-1,2])) # 0 
+
 
 # GUI...
 
