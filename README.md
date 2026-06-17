@@ -6,6 +6,6 @@ At the time, I wrote “There are probably equivalent or better tools out there,
 
 Thinking I would probably come across a better approach, that would allow fully deterministic outputs, ‘organically’ at some point, I avoided asking chatbots when they started to have opinions on such matters. Then, a little while ago, seeing a description for making a superset iteratively made me think “Why didn’t I think of that?” Not ideal, as applying it to a collection with replicate elements means there will be replicate (equivalent, order not important) subcollections in the ‘supercollection’, but still something worth making before trying to improve efficiency.
 
-Limitation: because of the exponential growth of subcollection with input size, 
-the algorithm is not practical for processing inputs above approx. 20 numbers on my laptop.
+Limitation: Because of the exponential growth of subcollection number with input size, 
+the algorithm is not practical for processing inputs above approx. 20 elements on my laptop.
 
