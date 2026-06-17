@@ -9,14 +9,16 @@ a deterministic split for the 'Divvier' problem, to replace
 the original tool which used random sampling to process
 larger arrays, so could not guarentee an optimal split.
 
-Snapshot11: Added a GUI (modified from my stop_the_press tool).
-Also discovered that, because of the exponential growth of subcollection with input size, 
-the algorithm is not practical for processing inputs above approx. 20 elements on my laptop.
+Snapshot12: Fixed an error found testing negative input.
+Although the tool was made with real-world positive-value items such as weights in mind,
+it should in principle handle negatives items also. Testing with negatives now generated 
+an 'unpredictable' error, exposing a bug I then found with the help of ChatGPT. 
+(Poor choice initialising a variable, when considering just positives initially.) 
 
 TODO: 
-- Arrange error message in output field for invalid input
-- Add a Clear button to GUI
-- Make an executable
+- Arrange error message in output field for invalid input.
+- Maybe: add a Clear button to GUI; disable editing of output (though not copying).
+- Make an executable.
 '''
 
 import re
@@ -25,9 +27,8 @@ import re
 # def divvy(nums: list[float]) -> str: 
 
 # If using GUI
-def divvy() -> str: # if using GUI
+def divvy(): # if using GUI
     text = input_field.get("1.0",'end').rstrip() 
-    # nums: list[float] = [float(x) for x in text.split()] 
     nums: list[float] = [float(x) for x in re.split(r"[,\s]+", text)]
 
     if len(nums) < 2: 
@@ -49,7 +50,11 @@ def divvy() -> str: # if using GUI
     half = total / 2
     # print('total', total, '  half', half) # temp check
 
-    min_offset = total # minimum offset from half (initialise at anything larger than half)
+    # min_offset = total # minimum offset from half (initialise at anything larger than half)
+    # --creates error situations when negative numbers occur in input!
+    # ...initialising to standard max value expression fixes this bug
+    min_offset = float('inf') # minimum offset from half 
+
     # ioffm = 0 # index of (first found) minimum offset (from half); Note2
     for i, subcoll_sum in enumerate(subcoll_sums):
         if abs(subcoll_sum - half) < min_offset:
@@ -100,7 +105,7 @@ Note4: This is of course time-inefficient.
 # print(divvy([378, 222, 1, 83, 704, 378, 222, 1, 83, 704])) # 0
 # print(divvy([378, 222, 1, 83, 704, 378, 222, 1, 83, 704, 378, 222, 1, 83, 704])) # 10
 # print(divvy([1.5,2.5,0.5,4.5])) # 0.0
-
+# print(divvy([1,-2,-1,2])) # 0 
 
 # GUI...
 
