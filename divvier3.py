@@ -9,13 +9,27 @@ a deterministic split for the 'Divvier' problem, to replace
 the original tool which used random sampling to process
 larger arrays, so could not guarentee an optimal split.
 
-Snapshot10: A few more tests.
+Snapshot11: Added a GUI (modified from my stop_the_press tool).
+Also discovered that, because of the exponential growth of subcollection with input size, 
+the algorithm is not practical for processing inputs above approx. 20 elements on my laptop.
 
-TODO: Make GUI, executable.
+TODO: 
+- Arrange error message in output field for invalid input
+- Add a Clear button to GUI
+- Make an executable
 '''
 
-# def divvy(nums: list[float]) -> tuple[list[float], list[float]]: 
-def divvy(nums: list[float]) -> str: 
+import re
+
+# If using CLI
+# def divvy(nums: list[float]) -> str: 
+
+# If using GUI
+def divvy() -> str: # if using GUI
+    text = input_field.get("1.0",'end').rstrip() 
+    # nums: list[float] = [float(x) for x in text.split()] 
+    nums: list[float] = [float(x) for x in re.split(r"[,\s]+", text)]
+
     if len(nums) < 2: 
         return 'Input lists smaller than 2 numbers are not relevant.\n'
 
@@ -48,12 +62,19 @@ def divvy(nums: list[float]) -> str:
         complement.remove(e)
     # print('complement', complement) # temp check
  
-    return ('Smallest difference found: ' + str(abs(subcoll_sums[ioffm] - sum(complement))) + '\n' +
+    report = ('Smallest difference found: ' + str(abs(subcoll_sums[ioffm] - sum(complement))) + '\n' +
     'between subcollection ' + str(subcolls[ioffm]) + '\n' +
     '(totalling ' + str(subcoll_sums[ioffm])  + ')\n' +
     'and complement        ' + str(complement) + '\n' 
     '(totalling ' + str(sum(complement))  + ')\n' +
     '(Other combinations may exist.)\n')
+
+    # If using CLI
+    # return report
+
+    # If using GUI
+    output_field.delete('1.0', END) # clear any existing output
+    output_field.insert("end", report)
 
 '''
 Note1: This would need to be removed if single-element inputs 
@@ -67,15 +88,39 @@ Note4: This is of course time-inefficient.
 
 
 # Some tests, with smallest difference noted 
-print(divvy([])) # Input lists smaller than 2 numbers are not relevant.
-print(divvy([1])) # Input lists smaller than 2 numbers are not relevant.
-print(divvy([3,3,7,5,9])) # 1 
-print(divvy([1,2,3])) # 0
-print(divvy([1,2])) # 1 
-print(divvy([1,2,1,2])) # 0 
-print(divvy([78, 93, 44, 27, 58, 25, 27, 73, 55, 32])) # 0 
-print(divvy([880, 953, 229, 77, 96, 37, 7, 30, 18, 2])) # 1 
-print(divvy([378, 222, 1, 83, 704, 6, 129, 455, 22, 97])) # 5
-print(divvy([378, 222, 1, 83, 704, 378, 222, 1, 83, 704])) # 0
-print(divvy([378, 222, 1, 83, 704, 378, 222, 1, 83, 704, 378, 222, 1, 83, 704])) # 10
+# print(divvy([])) # Input lists smaller than 2 numbers are not relevant.
+# print(divvy([1])) # Input lists smaller than 2 numbers are not relevant.
+# print(divvy([3,3,7,5,9])) # 1 
+# print(divvy([1,2,3])) # 0
+# print(divvy([1,2])) # 1 
+# print(divvy([1,2,1,2])) # 0 
+# print(divvy([78, 93, 44, 27, 58, 25, 27, 73, 55, 32])) # 0 
+# print(divvy([880, 953, 229, 77, 96, 37, 7, 30, 18, 2])) # 1 
+# print(divvy([378, 222, 1, 83, 704, 6, 129, 455, 22, 97])) # 5
+# print(divvy([378, 222, 1, 83, 704, 378, 222, 1, 83, 704])) # 0
+# print(divvy([378, 222, 1, 83, 704, 378, 222, 1, 83, 704, 378, 222, 1, 83, 704])) # 10
+# print(divvy([1.5,2.5,0.5,4.5])) # 0.0
 
+
+# GUI...
+
+from tkinter import *
+from tkinter.scrolledtext import ScrolledText
+root_widget = Tk()
+root_widget.title("divvier3 splits a collection of numbers in two as evenly as possible")
+root_widget.geometry("690x570") # provisional width, height GUI
+
+Label(root_widget, text = 'Enter list of numbers separated by commas and/or whitespace').grid(row=0, column=0) 
+
+input_field = ScrolledText(root_widget, width = 80, fg = 'blue', font=("Courier", 10), height=15) 
+input_field.grid(row=1, column=0, padx=15) 
+
+output = StringVar()
+
+submit_button = Button(root_widget, text = 'Submit', command = lambda: divvy(), bg='#C8C8C8')
+submit_button.grid(row=2, column=0)
+
+output_field = ScrolledText(root_widget, width = 80, fg = 'blue', font=("Courier", 10), height=15) 
+output_field.grid(row=3, column=0) 
+
+root_widget.mainloop()
