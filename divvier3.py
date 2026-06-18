@@ -9,16 +9,17 @@ a deterministic split for the 'Divvier' problem, to replace
 the original tool which used random sampling to process
 larger arrays, so could not guarentee an optimal split.
 
-Snapshot15: Added the (optional) lines to prevent manual editing of output.
+Snapshot16: Just comment, inc. re new divvier3b.
 
 TODO: 
-- Maybe: add a Clear button to GUI.
+- Attempt some comparisons of run speed for various inputs with new variant, divvier3b.
+- (Maybe add a Clear button to GUI.)
 - Make an executable.
 '''
 
 import re
 
-# If using CLI
+# If using CLI/IDE
 # def divvy(nums: list[float]) -> str: 
 
 # If using GUI
@@ -76,7 +77,7 @@ def divvy(): # if using GUI
     '(totalling ' + str(sum(complement))  + ')\n' +
     '(Other combinations may exist.)\n')
 
-    # If using CLI
+    # If using CLI/IDE
     # return report
 
     # If using GUI
