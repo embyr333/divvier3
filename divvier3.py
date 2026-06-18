@@ -9,15 +9,10 @@ a deterministic split for the 'Divvier' problem, to replace
 the original tool which used random sampling to process
 larger arrays, so could not guarentee an optimal split.
 
-Snapshot14: 
-- Added a condition to terminate process of finding first
-subcollection if split is perfect (equal to half collection sum).
-(Reduces redundant processing.)
-- Minor tweak: Changed GUI input pre-processing rstrip() to strip() to  
-avoid flagging input that might be prededed by whitespace as erroneous. 
+Snapshot15: Added the (optional) lines to prevent manual editing of output.
 
 TODO: 
-- Maybe: add a Clear button to GUI; disable editing of output (though not copying).
+- Maybe: add a Clear button to GUI.
 - Make an executable.
 '''
 
@@ -28,9 +23,8 @@ import re
 
 # If using GUI
 def divvy(): # if using GUI
-    # text = input_field.get("1.0",'end').rstrip() 
-    # --change to remove any whitespace from before input numbers also
     text = input_field.get("1.0",'end').strip() 
+    output_field.configure(state='normal') # Note1a
     output_field.delete('1.0', END) # clear any existing output
     try:
         nums: list[float] = [float(x) for x in re.split(r"[,\s]+", text)]
@@ -44,7 +38,7 @@ def divvy(): # if using GUI
     subcolls: list[list[float]] = [[]]
     for num in nums:
         subcolls += [subcoll + [num] for subcoll in subcolls]
-    # Discard first (empty) item and complement (full input); Note1
+    # Discard first (empty) item and complement (full input); Note2
     subcolls = subcolls[1 : len(subcolls) - 1]
     # print('subcolls', subcolls) # temp check
 
@@ -59,10 +53,10 @@ def divvy(): # if using GUI
 
     min_offset = float('inf') # minimum offset from half 
 
-    # ioffm = 0 # index of (first found) minimum offset (from half); Note2
+    # ioffm = 0 # index of (first found) minimum offset (from half); Note3
     for i, subcoll_sum in enumerate(subcoll_sums):
         offset = abs(subcoll_sum - half)
-        if not offset: # it is 0, cannot get better --added short-circuit
+        if not offset: # it is 0, cannot get better, so short-circuit
             ioffm = i
             break 
         elif offset < min_offset:
@@ -70,8 +64,8 @@ def divvy(): # if using GUI
             min_offset = offset 
     # print('min_offset is', min_offset, 'for subcoll', subcolls[ioffm])
 
-    complement = nums.copy() # Note3
-    for e in subcolls[ioffm]: # Note4
+    complement = nums.copy() # Note4
+    for e in subcolls[ioffm]: # Note5
         complement.remove(e)
     # print('complement', complement) # temp check
  
@@ -87,15 +81,18 @@ def divvy(): # if using GUI
 
     # If using GUI
     output_field.insert("end", report)
+    output_field.configure(state='disabled') # optional, Note1b
 
 '''
-Note1: This would need to be removed if single-element inputs 
+Note1a: Needed to reset between runs if using 'disabled' (Note1b)   
+at end of function to prevent output being manually edited.
+Note2: This would need to be removed if single-element inputs 
 are possible, and the handling of these with an 'error message'
 were not present at the beginning of the function.
-Note2: ...Conversely, this would need to be put back.
-Note3: Making copy in case we need to avoid modifying the input list.
+Note3: ...Conversely, this would need to be put back.
+Note4: Making copy in case we need to avoid modifying the input list.
 Shallow copy is sufficient as elements are primitives.
-Note4: This is of course time-inefficient.
+Note5: This is of course time-inefficient.
 '''
 
 
