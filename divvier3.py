@@ -9,7 +9,12 @@ a deterministic split for the 'Divvier' problem, to replace
 the original tool which used random sampling to process
 larger arrays, so could not guarentee an optimal split.
 
-Snapshot13: Arranged to display error message in output field for invalid input.
+Snapshot14: 
+- Added a condition to terminate process of finding first
+subcollection if split is perfect (equal to half collection sum).
+(Reduces redundant processing.)
+- Minor tweak: Changed GUI input pre-processing rstrip() to strip() to  
+avoid flagging input that might be prededed by whitespace as erroneous. 
 
 TODO: 
 - Maybe: add a Clear button to GUI; disable editing of output (though not copying).
@@ -23,7 +28,9 @@ import re
 
 # If using GUI
 def divvy(): # if using GUI
-    text = input_field.get("1.0",'end').rstrip() 
+    # text = input_field.get("1.0",'end').rstrip() 
+    # --change to remove any whitespace from before input numbers also
+    text = input_field.get("1.0",'end').strip() 
     output_field.delete('1.0', END) # clear any existing output
     try:
         nums: list[float] = [float(x) for x in re.split(r"[,\s]+", text)]
@@ -54,9 +61,13 @@ def divvy(): # if using GUI
 
     # ioffm = 0 # index of (first found) minimum offset (from half); Note2
     for i, subcoll_sum in enumerate(subcoll_sums):
-        if abs(subcoll_sum - half) < min_offset:
-            min_offset = abs(subcoll_sum - half)
+        offset = abs(subcoll_sum - half)
+        if not offset: # it is 0, cannot get better --added short-circuit
             ioffm = i
+            break 
+        elif offset < min_offset:
+            ioffm = i
+            min_offset = offset 
     # print('min_offset is', min_offset, 'for subcoll', subcolls[ioffm])
 
     complement = nums.copy() # Note3
