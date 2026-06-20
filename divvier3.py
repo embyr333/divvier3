@@ -9,15 +9,18 @@ a deterministic split for the 'Divvier' problem, to replace
 the original tool which used random sampling to process
 larger arrays, so could not guarentee an optimal split.
 
-Snapshot16: Just comment, inc. re new divvier3b.
+Snapshot17: Added a pair of optional statements (now commented out)
+to time runs for comparison with divvier3b.
+divvier3b was a little faster on 5 of the 7 input lists tested -
+see Word file divvier3 vs 3b. 
 
 TODO: 
-- Attempt some comparisons of run speed for various inputs with new variant, divvier3b.
 - (Maybe add a Clear button to GUI.)
-- Make an executable.
+- (Maybe make an executable.)
 '''
 
 import re
+import time 
 
 # If using CLI/IDE
 # def divvy(nums: list[float]) -> str: 
@@ -35,6 +38,9 @@ def divvy(): # if using GUI
 
     if len(nums) < 2: 
         return 'Input lists smaller than 2 numbers are not relevant.\n'
+    
+    # Optional: Execute if want to time the run (with partner statement near end)
+    # start_time = time.time() 
 
     subcolls: list[list[float]] = [[]]
     for num in nums:
@@ -76,6 +82,9 @@ def divvy(): # if using GUI
     'and complement        ' + str(complement) + '\n' 
     '(totalling ' + str(sum(complement))  + ')\n' +
     '(Other combinations may exist.)\n')
+
+    # Optional: Print time taken in milliseconds to terminal (optional)
+    # print((time.time() - start_time) * 1000) 
 
     # If using CLI/IDE
     # return report
