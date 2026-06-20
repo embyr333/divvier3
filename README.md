@@ -9,4 +9,4 @@ Thinking I would probably come across a better approach, that would allow fully 
 Limitation: Because of the exponential growth of subcollection number with input size, 
 the algorithm is not practical for processing inputs above approx. 20 elements on my laptop.
 
-Update: Have now made a version 'divvier3b' that may be more efficient, and hope to compare performances crudely.
+Update: Have now made a version 'divvier3b' that might be expected to be a bit more more efficient, and was a little faster on 5 of the 7 input lists crudely tested against this program - see Word file "divvier3 vs 3b".
